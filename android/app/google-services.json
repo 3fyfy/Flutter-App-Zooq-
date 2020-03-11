@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "406118414669",
+    "firebase_url": "https://zooq-562a5.firebaseio.com",
+    "project_id": "zooq-562a5",
+    "storage_bucket": "zooq-562a5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:406118414669:android:f81d00762df477d1df9f04",
+        "android_client_info": {
+          "package_name": "app.com.example.app_zooq"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "406118414669-r7qo2tib3ch0012mu893c25thrkuiub9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDWuM2VRFQwrMGU4d_dzTi_MmisbZBN1Ws"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "406118414669-r7qo2tib3ch0012mu893c25thrkuiub9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:406118414669:android:436ae860bb1277addf9f04",
+        "android_client_info": {
+          "package_name": "com.app.zooq"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "406118414669-r7qo2tib3ch0012mu893c25thrkuiub9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDWuM2VRFQwrMGU4d_dzTi_MmisbZBN1Ws"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "406118414669-r7qo2tib3ch0012mu893c25thrkuiub9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
