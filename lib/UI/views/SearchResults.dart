@@ -1,4 +1,4 @@
-import 'package:app_zooq/UI/views/GridViewProd.dart';
+import 'file:///E:/Flutter/IntelliJIDEAProjects/app_zooq/app_zooq/lib/UI/widgets/GridViewProd.dart';
 import 'package:flutter/material.dart';
 
 
@@ -15,7 +15,7 @@ class _SerachResultsState extends State<SerachResults> {
 
   @override
   Widget build(BuildContext context) {
-;
+
     return Directionality(
         textDirection: TextDirection.rtl,
         child: Scaffold(
@@ -37,7 +37,7 @@ class _SerachResultsState extends State<SerachResults> {
             ],
           ),
 
-          body:GridViewProd('Product')
+          body:GridViewProd()
 
         )
 

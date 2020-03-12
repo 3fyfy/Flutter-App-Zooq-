@@ -1,19 +1,8 @@
+import 'package:app_zooq/Core/services/mainProvider.dart';
 import 'package:app_zooq/UI/views/Mainnavbar.dart';
 import 'package:flutter/material.dart';
-
-//component
-//component
-
-
-//screen
-
-
-import 'GridViewProd.dart';
-
-
-
-//data
-//import 'package:zooq/Screens/Data/DataProd.dart';
+import 'package:provider/provider.dart';
+import '../widgets/GridViewProd.dart';
 
 
 class Favourite extends StatefulWidget {
@@ -24,15 +13,14 @@ class Favourite extends StatefulWidget {
 
 class _FavouriteState extends State<Favourite> {
 
-  //List<dynamic> items=[];
-
 
 
   @override
   Widget build(BuildContext context) {
+    final mainProvider = Provider.of<MainProvider>(context);
+    mainProvider.collectionName='Favourite';
     double width=MediaQuery.of(context).size.width;
     double height=MediaQuery.of(context).size.height;
-    double heightItem=height/3;
 
     return Directionality(
         textDirection: TextDirection.rtl,
@@ -58,7 +46,7 @@ class _FavouriteState extends State<Favourite> {
             ],
           ),
 
-          body:  GridViewProd('Favourite')
+          body:  GridViewProd()
 
 
         )

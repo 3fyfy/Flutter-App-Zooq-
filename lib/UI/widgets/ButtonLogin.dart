@@ -1,52 +1,51 @@
+import 'package:app_zooq/Core/constants/app_contstant.dart';
+import 'package:app_zooq/Core/services/mainProvider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class ButtonLogin extends StatelessWidget {
+class ButtonLogin extends StatefulWidget {
+  final String title;
+  final String route;
 
-  final String name;
- final  Widget route;
-  ButtonLogin(this.name,this.route);
+  ButtonLogin(this.title, this.route);
+
+  @override
+  _ButtonLoginState createState() => _ButtonLoginState();
+}
+
+class _ButtonLoginState extends State<ButtonLogin> {
   @override
   Widget build(BuildContext context) {
-      return  Padding(
-        padding: const EdgeInsets.only(top: 10,right: 25,left: 15),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Center(
-              child: InkWell(
-                  onTap: (){
+    return  InkWell(
+      onTap: ()async{
+        final mainProvider = Provider.of<MainProvider>(context);
+        mainProvider.collectionName='Product';
+        Navigator.of(context).pushNamed(widget.route);                          },
+      child: Padding(
+        padding:  EdgeInsets.only(left:MediaQuery.of(context).size.width/4,right:MediaQuery.of(context).size.width/4,top: 30 ),
+        child: Container(
+            height: 50,
+            decoration: BoxDecoration(
+                color: Theme.of(context).accentColor,
+                border: Border.all(color: Theme.of(context).accentColor,style: BorderStyle.solid),
+                borderRadius: BorderRadius.all(Radius.circular(50))
 
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>route));
-                  },
-                  child: Container(
-                      width: 140,
-                      height: 50,
-                      decoration: BoxDecoration(
-                          color: Theme.of(context).accentColor,
-                          border: Border.all(color: Theme.of(context).accentColor,style: BorderStyle.solid),
-                          borderRadius: BorderRadius.all(Radius.circular(50))
-
-                      ),
-                      child: Container(
-                        width: 130,
-                        height: 40,
-                        decoration: BoxDecoration(
-                            color: Theme.of(context).accentColor,
-                            border: Border.all(color: Colors.white,style: BorderStyle.solid),
-                            borderRadius: BorderRadius.all(Radius.circular(50))
+            ),
+            child: Container(
+                height: 40,
+                decoration: BoxDecoration(
+                    color: Theme.of(context).accentColor,
+                    border: Border.all(color: Colors.white,style: BorderStyle.solid),
+                    borderRadius: BorderRadius.all(Radius.circular(50))
 
 
-                        ),
-                        child: Center(
-
-                            child: Text(name,style: TextStyle(fontSize: 20,color: Colors.white),)),
-                      ))),
+                ),
+                child: Center(
+                  child: Text(widget.title,style: TextStyle(fontSize: 20,color: Colors.white),),
+                )
             )
-          ],
         ),
-
-      );
-
-
+      ),
+    );
   }
 }

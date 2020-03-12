@@ -1,7 +1,9 @@
+import 'package:app_zooq/Core/services/mainProvider.dart';
 import 'package:app_zooq/UI/widgets/AutoText.dart';
 import 'package:app_zooq/UI/widgets/Search.dart';
 import 'package:app_zooq/UI/widgets/bghome.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'ListProduct.dart';
 import 'men3tor.dart';
@@ -26,6 +28,8 @@ class _HomeState extends State<Home> {
       padding: const EdgeInsets.only(top:5.0,bottom: 5),
       child: InkWell(
         onTap: (){
+          final mainProvider = Provider.of<MainProvider>(context);
+          mainProvider.collectionName='Product';
           Navigator.push(context, MaterialPageRoute(builder: (context)=>ShopMen(title)));
         },
         child: Container(
@@ -66,6 +70,10 @@ class _HomeState extends State<Home> {
                 InkWell(child:
                 AutoText(text:"عرض الكل" ,size: 20,),
                   onTap: (){
+                    setState(() {
+                      final mainProvider = Provider.of<MainProvider>(context);
+                      mainProvider.collectionName='Product';
+                    });
                   Navigator.push(context, MaterialPageRoute(builder: (context)=>ShopMen("عطور مميزة")));
 
                 },),

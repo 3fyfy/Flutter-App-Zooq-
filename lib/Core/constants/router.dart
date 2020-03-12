@@ -2,6 +2,7 @@ import 'package:app_zooq/Core/constants/app_contstant.dart';
 import 'package:app_zooq/UI/views/Cart.dart';
 import 'package:app_zooq/UI/views/Login.dart';
 import 'package:app_zooq/UI/views/Mainnavbar.dart';
+import 'package:app_zooq/UI/views/SearchResults.dart';
 import 'package:app_zooq/UI/views/Signup.dart';
 import 'package:app_zooq/UI/views/Splash.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,9 @@ class Router {
         return MaterialPageRoute(builder: (_) => Signup());
       case RoutePaths.NavBar:
         return MaterialPageRoute(builder: (_) => Mainnavbar());
+      case RoutePaths.SerachResults:
+        return MaterialPageRoute(builder: (_) => SerachResults());
+
       case RoutePaths.Cart:
         return MaterialPageRoute(builder: (_) => Cart());
       case RoutePaths.Address:

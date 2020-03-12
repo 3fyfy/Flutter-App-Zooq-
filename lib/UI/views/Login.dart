@@ -1,3 +1,4 @@
+
 import 'package:app_zooq/Core/constants/app_contstant.dart';
 import 'package:app_zooq/Core/services/userProvider.dart';
 import 'package:app_zooq/Core/services/user_controller.dart';
@@ -20,6 +21,7 @@ class _LoginState extends State<Login> {
   Widget _buildBodyLogin(){
 
     final userProvider = Provider.of<UserProvider>(context);
+
 
     double width=MediaQuery.of(context).size.width;
     double height=MediaQuery.of(context).size.height;
@@ -67,7 +69,11 @@ class _LoginState extends State<Login> {
                           onTap: ()async{
                             String  email=userProvider.emailControllerLog.text;
                             String  password=userProvider.passwordControllerLog.text;
+                            if(!(email.isEmpty&&password.isEmpty)){
+                              userProvider.loading=true;
+                            }
                            await userController.loginController(email,password);
+                           userProvider.loading=false;
                             userProvider.emailControllerLog=null;
                             userProvider.passwordControllerLog=null;
                             Navigator.of(context).pushReplacementNamed(RoutePaths.NavBar);                          },
@@ -92,8 +98,11 @@ class _LoginState extends State<Login> {
                                 ),
                                 child: Center(
 
-                                    child: Text("دخول الان",style: TextStyle(fontSize: 20,color: Colors.white),)),
-                              ))),
+                                    child: (userProvider.loading)?CircularProgressIndicator(backgroundColor: Colors.white,):Text("دخول الان",style: TextStyle(fontSize: 20,color: Colors.white),),
+                              )
+                              )
+                          ),
+                    )
                     )
                   ],
                 ),

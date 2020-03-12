@@ -1,4 +1,6 @@
+import 'package:app_zooq/Core/constants/app_contstant.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 
@@ -9,6 +11,46 @@ class RateDialog extends StatefulWidget {
 
 class _RateDialogState extends State<RateDialog> {
 
+
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+
+
+  @override
+  initState() {
+    super.initState();
+
+    var Android =
+    new AndroidInitializationSettings('@mipmap/ic_launcher');
+    var IOS = new IOSInitializationSettings();
+    var initializationSettings = new InitializationSettings(Android, IOS);
+    flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+    flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: onSelectNotification);
+  }
+
+  Future _showNotificationWithDefaultSound() async {
+    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+        'your channel id', 'your channel name', 'your channel description',
+        importance: Importance.Max, priority: Priority.High);
+    var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
+    var platformChannelSpecifics = new NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      'تمت العملية بنجاح',
+      'الذهاب الى الصفحة الرئيسية',
+      platformChannelSpecifics,
+      payload: 'Default_Sound',
+    );
+  }
+
+
+
+  Future onSelectNotification(String payload) async {
+
+    Navigator.of(context).pushReplacementNamed(RoutePaths.NavBar);
+
+  }
 
   double rating=0.0;
 
@@ -43,6 +85,13 @@ class _RateDialogState extends State<RateDialog> {
 
       contentPadding: EdgeInsets.only(top: 5,bottom: 5),
       titlePadding:EdgeInsets.only(top: 5,bottom: 5,left:10) ,
+      actions: <Widget>[
+        FlatButton(onPressed: (){
+          _showNotificationWithDefaultSound();
+
+        }, child: Text("تقييم",textAlign: TextAlign.center,),color: Theme.of(context).accentColor,)
+      ],
+
 
     );
   }

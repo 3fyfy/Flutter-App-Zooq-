@@ -1,3 +1,4 @@
+import 'package:app_zooq/Core/constants/app_contstant.dart';
 import 'package:app_zooq/UI/views/SearchResults.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +20,7 @@ class _SearchState extends State<Search> {
             hintText: "بحث عن منتج",
             suffixIcon: IconButton(icon: Icon(Icons.search,color: Theme.of(context).accentColor,size: 30,),
               onPressed: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>SerachResults()));
+                Navigator.of(context).pushNamed(RoutePaths.SerachResults);
               },),
             border: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey,width: 1),

@@ -1,3 +1,4 @@
+import 'package:app_zooq/Core/constants/app_contstant.dart';
 import 'package:app_zooq/UI/views/Mainnavbar.dart';
 import 'package:app_zooq/UI/views/SearchResults.dart';
 import 'package:app_zooq/UI/widgets/ButtonLogin.dart';
@@ -55,7 +56,7 @@ class _SearchState extends State<Search> {
               )
               ),
 
-              ButtonLogin("بحث",SerachResults() ),
+              ButtonLogin("بحث",RoutePaths.SerachResults ),
 
 
 

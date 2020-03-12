@@ -7,6 +7,17 @@ class UserProvider with ChangeNotifier {
   TextEditingController _passwordControllerLog=TextEditingController();
   TextEditingController _emailControllerReg=TextEditingController();
   TextEditingController _passwordControllerReg=TextEditingController();
+  bool _loading=false;
+
+  bool get loading=>_loading;
+
+  set loading(value){
+
+    _loading=value;
+    notifyListeners();
+
+
+  }
 
 
   TextEditingController get emailControllerLog=>_emailControllerLog;

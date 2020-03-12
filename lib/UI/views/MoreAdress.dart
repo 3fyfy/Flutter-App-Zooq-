@@ -1,5 +1,7 @@
+import 'package:app_zooq/Core/services/addressProvider.dart';
 import 'package:app_zooq/UI/widgets/BottomNavPay.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'Pay.dart';
 import 'Address.dart';
@@ -112,9 +114,19 @@ class _CustAddressState extends State<CustAddress> {
 
                                     child: Image.asset('images/icon-edit.png',height: 30,width: 20),
                                     onTap: ()async{
-                                     await Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Address(document.documentID)));
+                                      final addressProvider = Provider.of<AddressProvider>(context);
 
-                                    },
+
+                                        Firestore.instance.collection('Address').document(document.documentID).get().then((DocumentSnapshot snapshot) {
+                                          addressProvider.description.text=snapshot['description'];
+                                          addressProvider.street.text=snapshot['street'];
+                                          addressProvider.phone.text=snapshot['phone'];
+                                          addressProvider.notes.text=snapshot['notes'];
+                                          addressProvider.city=snapshot['city'];
+                                          addressProvider.check=snapshot['check'];
+                                        });
+                                     await Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Address(document.documentID)));
+                                     },
 
                                   ),
                                   SizedBox(width: 20,),

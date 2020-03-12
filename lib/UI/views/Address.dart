@@ -10,41 +10,29 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 class Address extends StatefulWidget {
- final String _adressId;
- Address(this._adressId);
+  final String _adressId;
+
+
+  Address(this._adressId);
 
   @override
-  _AddressState createState() => _AddressState(this._adressId);
+  _AddressState createState() => _AddressState();
 }
 
 class _AddressState extends State<Address> {
 
-  final String _adressId;
-  _AddressState(this._adressId);
 
 
-
- @override
+  @override
   void initState() {
 
-   if(_adressId!='') {
-     final addressProvider = Provider.of<AddressProvider>(context);
 
-     Firestore.instance.collection('Address').document(_adressId).get().then((DocumentSnapshot snapshot) {
-        addressProvider.description.text=snapshot['description'];
-        addressProvider.street.text=snapshot['street'];
-        addressProvider.phone.text=snapshot['phone'];
-        addressProvider.notes.text=snapshot['notes'];
-        addressProvider.city=snapshot['city'];
-        addressProvider.check=snapshot['check'];
-      });
-    }
     // TODO: implement initState
     super.initState();
   }
 
 
-   final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
 
 
 
@@ -56,39 +44,51 @@ class _AddressState extends State<Address> {
     final addressProvider = Provider.of<AddressProvider>(context);
 
     Widget dropDown(){
-      String hint;
-     if(addressProvider.city==null) hint="المدينة";
-     else hint=addressProvider.city;
+      return Padding(
+        padding: const EdgeInsets.only(top: 20),
+        child: Container(
+          padding: const EdgeInsets.only(top: 0,bottom: 15),
 
-      return  DropdownButtonFormField(
+          decoration: BoxDecoration(
+              border: Border(bottom:BorderSide(style: BorderStyle.solid,color: Colors.grey))
 
-        decoration: InputDecoration(
-          hintText:hint,
-              alignLabelWithHint: true,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              (addressProvider.city==null)?Text("المدينة",style: TextStyle(color: Colors.grey),):Text(addressProvider.city),
 
-              contentPadding: EdgeInsets.all(5),
+              new PopupMenuButton(
+                child:Icon(Icons.arrow_drop_down),
 
+
+                itemBuilder: (_) =>   <String> ['القاهرة', 'الاسكندرية', 'المنصورة', 'اسوان'].map((String value){
+
+                  return PopupMenuItem<String>(
+                      value: value,
+
+                      child:Directionality(
+                        textDirection: TextDirection.rtl,
+                        child: Container(
+                            width: MediaQuery.of(context).size.width-80,
+                            child: Text(value)),
+                      ));
+
+                }).toList(),
+                onSelected: (String value){
+                  setState(() {
+                    addressProvider.city=value;
+                  });
+                  return addressProvider.city;
+                },
+
+              ),
+
+            ],
+          ),
         ),
-
-        onChanged: (Object value){
-          setState(() {
-            addressProvider.city = value;
-          });
-        },
-        value:addressProvider.city ,
-          items:<String> ['القاهرة', 'الاسكندرية', 'المنصورة', 'اسوان'].map((String value){
-
-        return DropdownMenuItem<String>(
-            value: value,
-            child: Text(value));
-
-      }).toList() ,
-
       );
     }
-
-
-
 
     Widget _buildButton(){
 
@@ -96,24 +96,22 @@ class _AddressState extends State<Address> {
         padding: const EdgeInsets.only(top:30.0,bottom: 2),
         child: InkWell(
             onTap: ()async{
-
-              print('clxllkvlxkvlcvxv${addressProvider.street.text}');
-              if (_formKey.currentState.validate()&&addressProvider.city!=null) {
-
-                if(_adressId=='')
-                await Firestore.instance.collection('Address')
-                    .document()
-                    .setData({
-                  'city': addressProvider.city,
-                  'street': addressProvider.street.text,
-                  'phone': addressProvider.phone.text,
-                  'description': addressProvider.description.text,
-                  'notes':addressProvider.notes.text,
-                  'check':true
-                });
+              if (_formKey.currentState.validate()&& addressProvider.city!=null) {
+                addressProvider.loading=true;
+                if(widget._adressId=='')
+                  await Firestore.instance.collection('Address')
+                      .document()
+                      .setData({
+                    'city': addressProvider.city,
+                    'street': addressProvider.street.text,
+                    'phone': addressProvider.phone.text,
+                    'description': addressProvider.description.text,
+                    'notes':addressProvider.notes.text,
+                    'check':true
+                  });
                 else
                   await Firestore.instance.collection('Address')
-                      .document(_adressId)
+                      .document(widget._adressId)
                       .updateData({
                     'city': addressProvider.city,
                     'street': addressProvider.street.text,
@@ -122,6 +120,7 @@ class _AddressState extends State<Address> {
                     'notes':addressProvider.notes.text,
                     'check':addressProvider.check
                   });
+                addressProvider.loading=false;
 
 
                 Navigator.push(context,
@@ -153,7 +152,7 @@ class _AddressState extends State<Address> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Text("متابعة",style: TextStyle(fontSize: 10,color: Colors.white,fontWeight: FontWeight.bold),),
+                          (addressProvider.loading)?CircularProgressIndicator(backgroundColor: Colors.white,):Text("متابعة",style: TextStyle(fontSize: 10,color: Colors.white,fontWeight: FontWeight.bold),),
                         ],
                       )),
                 ))),
@@ -162,74 +161,65 @@ class _AddressState extends State<Address> {
 
     Widget _buildBottomCarousel(){
       return Padding(
-        padding: const EdgeInsets.only(top:0,bottom:0,right: 40,left: 40),
-        child: Container(
-          width:MediaQuery.of(context).size.width-80 ,
-          child: Form(
-            key: _formKey,
-            child:
-            Column(children: <Widget>[
+          padding: const EdgeInsets.only(top:0,bottom:0,right: 20,left: 20),
+          child: Container(
+            width:MediaQuery.of(context).size.width-80 ,
+            child: Form(
+              key: _formKey,
+              child:
+              Column(children: <Widget>[
 
 
-              dropDown(),
-              BuildTextField(hintText:"الشارع",secure: false,),
+                dropDown(),
+                BuildTextField(hintText:"الشارع",secure: false,controller: addressProvider.street,),
 
-              BuildTextField(hintText:"معلم قريب منه",secure: false, ),
-              BuildTextField(hintText:"رقم الهاتف",secure: false, type: TextInputType.phone,),
-              BuildTextField(hintText:"ملاحظات الشحن",secure: false ),
+                BuildTextField(hintText:"معلم قريب منه",secure: false,controller: addressProvider.description, ),
+                BuildTextField(hintText:"رقم الهاتف",secure: false, type: TextInputType.phone,controller: addressProvider.phone,),
+                BuildTextField(hintText:"ملاحظات الشحن",secure: false,controller: addressProvider.notes, ),
 
-              _buildButton()
+                _buildButton()
 
-            ],
-          ),
+              ],
+              ),
 
 
-        ),
-      ));
+            ),
+          ));
     }
 
     Widget _buildBody()
     {
-      return ListView(
-        children: <Widget>[
-          Stack (
+      return Stack (
 
-              children:<Widget>[
+            children:<Widget>[
 
-                Container(
-                  height:MediaQuery.of(context).size.height/2 ,
-                  color: Theme.of(context).accentColor,
+              Container(
+                height:MediaQuery.of(context).size.height/2 ,
+                color: Theme.of(context).accentColor,
 
-                ),
+              ),
 
-                Padding(
-    padding: const EdgeInsets.only(top:30,bottom:0,right: 20,left: 20),
-    child: Container(
-    height: MediaQuery.of(context).size.height-(AppBar().preferredSize.height+30),
-    decoration: BoxDecoration(
-    color: Colors.white,
-    borderRadius: BorderRadius.all(Radius.circular(6))
-    ),
-    )
-    ),
-                MapView(),
-
-
-                Padding(padding:const EdgeInsets.only(top:200.0),
-
-
-    child:_buildBottomCarousel(),
-
-                )
-
-
-              ]
-          ),
+              Padding(
+                  padding: const EdgeInsets.only(top:30,bottom:0,right: 20,left: 20),
+                  child: Container(
+                    height: MediaQuery.of(context).size.height+(AppBar().preferredSize.height+30),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(6))
+                    ),
+                    child: ListView(
+                      children: <Widget>[
+                        MapView(),
+                        _buildBottomCarousel()
+                      ],
+                    ),
+                  )
+              ),
 
 
 
-        ],
-      );
+            ]
+        );
 
     }
 
@@ -261,3 +251,6 @@ class _AddressState extends State<Address> {
     );
   }
 }
+
+
+

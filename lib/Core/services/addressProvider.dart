@@ -9,8 +9,10 @@ class AddressProvider with ChangeNotifier {
    TextEditingController _street = TextEditingController();
    String _city;
    bool _check=true;
+   bool _loading=false;
 
-  TextEditingController get description=>_description;
+
+   TextEditingController get description=>_description;
   TextEditingController get phone=>_phone;
 
   TextEditingController get notes=>_notes;
@@ -53,6 +55,18 @@ set city(value){
     notifyListeners();
 
   }
+
+
+
+   bool get loading=>_loading;
+
+   set loading(value){
+
+     _loading=value;
+     notifyListeners();
+
+
+   }
 
 
   @override

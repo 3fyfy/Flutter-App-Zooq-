@@ -1,6 +1,7 @@
 import 'package:app_zooq/Core/constants/app_contstant.dart';
 import 'package:app_zooq/Core/constants/router.dart';
 import 'package:app_zooq/Core/services/addressProvider.dart';
+import 'package:app_zooq/Core/services/mainProvider.dart';
 import 'package:app_zooq/Core/services/userProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +16,8 @@ class MyApp extends StatelessWidget {
         providers: [
                   ChangeNotifierProvider<UserProvider>.value(value: UserProvider(),),
           ChangeNotifierProvider<AddressProvider>.value(value: AddressProvider(),),
+          ChangeNotifierProvider<MainProvider>.value(value: MainProvider(),),
+
 
         ],
 

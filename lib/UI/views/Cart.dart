@@ -1,8 +1,11 @@
+import 'package:app_zooq/Core/services/addressProvider.dart';
 import 'package:app_zooq/Core/services/cart_controller.dart';
+import 'package:app_zooq/Core/services/mainProvider.dart';
 import 'package:app_zooq/UI/views/Address.dart';
 import 'package:app_zooq/UI/widgets/AutoText.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
 
 
 class Cart extends StatefulWidget {
@@ -13,10 +16,14 @@ class Cart extends StatefulWidget {
 class _CartState extends State<Cart> {
   final CartController cartController = CartController();
 
+
+
+
   int count = 0;
 
   @override
   Widget build(BuildContext context) {
+    final mainProvider = Provider.of<MainProvider>(context);
     double width=MediaQuery.of(context).size.width;
     double height=MediaQuery.of(context).size.height;
 
@@ -28,6 +35,7 @@ class _CartState extends State<Cart> {
         child: StreamBuilder(
             stream: Firestore.instance.collection('Cart').snapshots(),
             builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+
               if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
               switch (snapshot.connectionState) {
                 case ConnectionState.waiting:
@@ -39,6 +47,7 @@ class _CartState extends State<Cart> {
                   return ListView(
                     children:
                         snapshot.data.documents.map((DocumentSnapshot document) {
+
                       return Padding(
                           padding:  EdgeInsets.only(
                               top: 5.0, bottom: 5, left: widthcontent*.01, right: widthcontent*.01),
@@ -222,7 +231,9 @@ class _CartState extends State<Cart> {
                     }).toList(),
                   );
               }
-            }),
+            }
+
+            ),
       );
     }
 
@@ -278,7 +289,10 @@ class _CartState extends State<Cart> {
           body: _buildBody(),
           bottomNavigationBar: Container(
             height: 50,
-            decoration: BoxDecoration(color: Theme.of(context).accentColor),
+            decoration: BoxDecoration(
+
+                color:Theme.of(context).accentColor
+            ),
             child: Padding(
               padding:
                   const EdgeInsets.only(top: 0, bottom: 0, right: 30, left: 30),
@@ -293,15 +307,16 @@ class _CartState extends State<Cart> {
                             fontWeight: FontWeight.bold,
                             color: Colors.white)),
                     onTap: () {
+                      final addressProvider = Provider.of<AddressProvider>(context);
 
-
-
+                      addressProvider.description=TextEditingController();
+                      addressProvider.street=TextEditingController();
+                      addressProvider.phone=TextEditingController();
+                      addressProvider.notes=TextEditingController();
+                      addressProvider.city=null;
+                      addressProvider.check=null;
                           Navigator.of(context).push(
                               MaterialPageRoute(builder: (context) => Address('')));
-
-
-
-
 
                     },
                   )

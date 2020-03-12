@@ -40,7 +40,7 @@ class _MapViewState extends State<MapView> {
   @override
   Widget build(BuildContext context) {
     return  Padding(
-      padding: const EdgeInsets.only(top:40.0,right: 30,left: 30),
+      padding: const EdgeInsets.only(top:10.0,right: 10,left: 10),
       child: Container(
         height:150,
         width: MediaQuery.of(context).size.width,

@@ -10,6 +10,8 @@ class RoutePaths {
   static const String NavBar='/navbar';
   static const String Cart='/cart';
   static const String Address='/address';
+  static const String SerachResults='/serachResults';
+  static const String NotificationPage='/NotificationPage';
 
 
 
