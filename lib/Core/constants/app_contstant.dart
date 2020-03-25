@@ -12,6 +12,7 @@ class RoutePaths {
   static const String Address='/address';
   static const String SerachResults='/serachResults';
   static const String NotificationPage='/NotificationPage';
+  static const String EXP='/exp';
 
 
 

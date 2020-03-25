@@ -14,7 +14,6 @@ class FirebaseAuthintication{
 
  Future<FirebaseUser> register(String email,String password)async{
   AuthResult authResult= await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
-  print("asasassasasasasasasas ${authResult.toString()}");
 
   return authResult.user;
   }
@@ -22,7 +21,6 @@ class FirebaseAuthintication{
   Future<FirebaseUser>getCurrenUser()async{
 
     FirebaseUser user =await _firebaseAuth.currentUser();
-    print(user);
     return user;
 
 

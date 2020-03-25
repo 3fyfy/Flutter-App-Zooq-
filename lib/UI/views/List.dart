@@ -1,12 +1,23 @@
 import 'dart:io';
 
 import 'package:app_zooq/Core/constants/app_contstant.dart';
+import 'package:app_zooq/Core/services/mainProvider.dart';
 import 'package:app_zooq/Core/services/user_controller.dart';
 import 'package:app_zooq/UI/views/men3tor.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:app_zooq/Core/services/user_controller.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 class ListDrawer extends StatefulWidget {
+
+  final String name;
+
+  ListDrawer(this.name);
+
   @override
   _ListDrawerState createState() => _ListDrawerState();
 }
@@ -17,10 +28,13 @@ class _ListDrawerState extends State<ListDrawer> {
   File _image;
 
   Future getImage(bool cam) async {
+    final mainProvider = Provider.of<MainProvider>(context);
+
 
     var image = await ImagePicker.pickImage(source:cam?ImageSource.camera:ImageSource.gallery);
 
     setState(() {
+      mainProvider.image=image;
       _image = image;
     });
   }
@@ -49,12 +63,18 @@ class _ListDrawerState extends State<ListDrawer> {
   void _showDialoge(){
      showDialog(context: context,
     builder: (context){
+      double height=MediaQuery.of(context).size.height;
       return AlertDialog(
 
         title: Text("Image Profile"),
         content: Container(
-          height: 100,
+          height:height*.3 ,
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+          Container(
+          height: height*.2,
+            child: Column(
             children: <Widget>[
               InkWell(
                 child: Text("Camera"),
@@ -68,16 +88,18 @@ class _ListDrawerState extends State<ListDrawer> {
                   getImage(false);
                 },
               ),
-              Padding(
-                padding: const EdgeInsets.only(top:8.0),
-                child: Container(
+              ]
+          ),
+          ),
 
+            Container(
+                  height: height*.1,
                   child:  InkWell(
                     child: Text("Close"),
                     onTap: (){
                       Navigator.of(context).pop();
                     },
-                  ),
+
                 ),
               )
             ],
@@ -93,8 +115,12 @@ class _ListDrawerState extends State<ListDrawer> {
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
+
+    final mainProvider = Provider.of<MainProvider>(context);
+
 //    double height=MediaQuery.of(context).size.height;
     return  Container(
       height: MediaQuery.of(context).size.height,
@@ -116,18 +142,20 @@ class _ListDrawerState extends State<ListDrawer> {
                     child: ListTile(
                       leading:  CircleAvatar(
                         backgroundColor: Colors.transparent,
+                       backgroundImage: mainProvider.image == null
+                           ? null:FileImage( mainProvider.image),
                         child: InkWell(
                           onTap: (){
 
                             _showDialoge();
                           },
 
-                            child:_image == null
-                                ? Text('No image selected.')
-                                : Image.file(_image),
+                            child: mainProvider.image == null
+                                ? Icon(Icons.camera_enhance)
+                                : null,
                         ),
                       ),
-                      title: Text("مرحبا بك"),
+                      title: Text("مرحبا بك  ${widget.name} "),
 
                     ),
                   ),

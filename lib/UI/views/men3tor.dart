@@ -1,12 +1,11 @@
-import 'file:///E:/Flutter/IntelliJIDEAProjects/app_zooq/app_zooq/lib/UI/widgets/GridViewProd.dart';
 import 'package:app_zooq/Core/services/cart_controller.dart';
 import 'package:app_zooq/Core/services/mainProvider.dart';
 import 'package:app_zooq/UI/views/productdetails.dart';
 import 'package:app_zooq/UI/widgets/AutoText.dart';
-import 'package:app_zooq/UI/widgets/HeaderGridView.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:app_zooq/UI/widgets/GridViewProd.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 
 
 
@@ -24,9 +23,67 @@ class ShopMen extends StatefulWidget {
 class _ShopMenState extends State<ShopMen> {
   final String title;
   _ShopMenState(this.title);
-  final CartController cartController=CartController();
+  bool flag=false;
+ static String _selection;
 
 
+  void _onItemTapped(String value) {
+    final mainProvider = Provider.of<MainProvider>(context);
+
+    _selection = value;
+    setState(() {
+      mainProvider.order=value;
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) =>ShopMen(title) ,));
+
+
+    });
+
+  }
+
+  Widget popUP(){
+    final mainProvider = Provider.of<MainProvider>(context);
+
+    return  PopupMenuButton<String>(
+      enabled: true,
+      onSelected: _onItemTapped,
+
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Image(image: AssetImage("images/icon-popover.png"),),
+      ),
+      itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+        const PopupMenuItem<String>(
+          value: 'more',
+          child: Text('الاعلى سعرا'),
+        ),
+        const PopupMenuItem<String>(
+          value: 'less',
+          child: Text('الاقل سعرا'),
+        ),
+      ],
+
+    );
+  }
+
+ Widget Header(){
+   final mainProvider = Provider.of<MainProvider>(context);
+   mainProvider.collectionName='Product';
+
+   return Container(
+      height: 30,
+      color: Theme.of(context).accentColor,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          popUP(),
+          IconButton(icon:Image(image: AssetImage("images/icon-menu.png")),onPressed: (){
+            mainProvider.gridOne=!mainProvider.gridOne;
+          },),
+        ],
+      ),
+    );
+ }
 
   @override
   Widget build(BuildContext context) {
@@ -34,10 +91,12 @@ class _ShopMenState extends State<ShopMen> {
 
     double width=MediaQuery.of(context).size.width;
     double height=MediaQuery.of(context).size.height;
+    final mainProvider = Provider.of<MainProvider>(context);
 
     return Directionality(
         textDirection: TextDirection.rtl,
         child: Scaffold(
+
         appBar: AppBar(
         title:AutoText(text:title ,size: 20,color: Colors.black),
 
@@ -53,7 +112,16 @@ class _ShopMenState extends State<ShopMen> {
     ),
 
 
-          body: GridViewProd()
+          body: Directionality(
+            textDirection: TextDirection.rtl,
+            child: ListView(
+              children: <Widget>[
+                Header(),
+                GridViewProd(mainProvider.order,'Product'),
+
+              ],
+            ),
+          )
 
 
         )

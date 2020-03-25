@@ -2,8 +2,10 @@ import 'package:app_zooq/Core/constants/app_contstant.dart';
 import 'package:app_zooq/Core/services/userProvider.dart';
 import 'package:app_zooq/Core/services/user_controller.dart';
 import 'package:app_zooq/UI/widgets/BuildTextField.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class Signup extends StatefulWidget {
@@ -73,11 +75,18 @@ class _SignupState extends State<Signup> {
                         Center(
                           child: InkWell(
                               onTap: ()async{
+                                SharedPreferences prefs = await SharedPreferences.getInstance();
 
                               String  email=userProvider.emailControllerReg.text;
                               String  password= userProvider.passwordControllerReg.text;
                               await userController.registerController(email, password);
-                              userProvider.emailControllerReg=null;
+                                prefs.setString('name', email.split('@')[0]);
+                                Firestore.instance.collection('Token').document().setData({
+                                  'token':prefs.get('token'),
+                                  'email':email,
+                                  'date':DateTime.now()
+                                });
+                                userProvider.emailControllerReg=null;
                               userProvider.passwordControllerReg=null;
                               Navigator.of(context).pushReplacementNamed(RoutePaths.NavBar);
                               },

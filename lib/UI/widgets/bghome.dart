@@ -27,13 +27,13 @@ class BgHome extends StatelessWidget {
 
         Container(
           height: (heightBgHome)+50,
-
           decoration: BoxDecoration(
-              image: DecorationImage(image: AssetImage("images/bg-Home-firstrow.png"),fit: BoxFit.cover)
+            color: Color.fromRGBO(200, 1, 52, .7),
           ),
+
           child: Container(
             decoration: BoxDecoration(
-              color: Color.fromRGBO(193, 1, 52, .7),
+                image: DecorationImage(image: AssetImage("images/bg-Home-firstrow.png"),fit: BoxFit.cover)
             ),
             child: Column(
               children: <Widget>[
@@ -67,7 +67,7 @@ class BgHome extends StatelessWidget {
                       InkWell(child: AutoText(text:"تسوق الان" ,size: 15,color: Colors.white,),
 
                         onTap: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=>ShopMen("عطور رجالي")));
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>ShopMen("عطور")));
 
                         },
                       ),
@@ -101,7 +101,7 @@ class BgHome extends StatelessWidget {
                 ],
               ),
               child: Center(
-                child: Image(image: AssetImage("images/icon-logo3.png"),width: 50,),
+                child: Image(image: AssetImage("images/icon-logo3 (1).png",),width: 50),
               ),
             )),
 

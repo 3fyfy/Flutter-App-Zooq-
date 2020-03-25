@@ -1,4 +1,5 @@
 import 'package:app_zooq/Core/constants/app_contstant.dart';
+import 'package:app_zooq/UI/views/addproduct.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';

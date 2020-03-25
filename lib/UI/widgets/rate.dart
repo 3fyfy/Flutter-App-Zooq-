@@ -1,4 +1,5 @@
 import 'package:app_zooq/Core/constants/app_contstant.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
@@ -86,13 +87,30 @@ class _RateDialogState extends State<RateDialog> {
       contentPadding: EdgeInsets.only(top: 5,bottom: 5),
       titlePadding:EdgeInsets.only(top: 5,bottom: 5,left:10) ,
       actions: <Widget>[
-        FlatButton(onPressed: (){
-          _showNotificationWithDefaultSound();
+        FlatButton(onPressed: ()async{
 
-        }, child: Text("تقييم",textAlign: TextAlign.center,),color: Theme.of(context).accentColor,)
+
+        await  Firestore.instance.collection('Cart').getDocuments().then((snapshot) {
+          for (DocumentSnapshot ds in snapshot.documents) {
+             Firestore.instance.collection('Product').document().updateData({'cart':false});
+            Firestore.instance.collection('Product').document(ds.documentID).updateData({'cart': false});
+            if(ds['favourite'])
+              Firestore.instance.collection('Favourite').document(ds.documentID).updateData({'cart': false});
+
+             Firestore.instance.collection('Cart').document(ds.documentID).delete();
+          }
+        }
+            );
+
+        _showNotificationWithDefaultSound();
+
+    }
+    , child: Text("تقييم",textAlign: TextAlign.center,),
+          color: Theme.of(context).accentColor,)
       ],
 
 
     );
+
   }
 }

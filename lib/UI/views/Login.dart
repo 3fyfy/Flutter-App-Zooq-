@@ -3,8 +3,11 @@ import 'package:app_zooq/Core/constants/app_contstant.dart';
 import 'package:app_zooq/Core/services/userProvider.dart';
 import 'package:app_zooq/Core/services/user_controller.dart';
 import 'package:app_zooq/UI/widgets/BuildTextField.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 
 
@@ -21,11 +24,12 @@ class _LoginState extends State<Login> {
   Widget _buildBodyLogin(){
 
     final userProvider = Provider.of<UserProvider>(context);
+    final mainprovider=Provider.of<UserProvider>(context);
 
 
     double width=MediaQuery.of(context).size.width;
     double height=MediaQuery.of(context).size.height;
-  return  ListView(
+    return  ListView(
       children: <Widget>[
         Container(
           width: width,
@@ -59,55 +63,65 @@ class _LoginState extends State<Login> {
                     ),
 
                   ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10,right: 25,left: 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Center(
-                      child: InkWell(
-                          onTap: ()async{
-                            String  email=userProvider.emailControllerLog.text;
-                            String  password=userProvider.passwordControllerLog.text;
-                            if(!(email.isEmpty&&password.isEmpty)){
-                              userProvider.loading=true;
-                            }
-                           await userController.loginController(email,password);
-                           userProvider.loading=false;
-                            userProvider.emailControllerLog=null;
-                            userProvider.passwordControllerLog=null;
-                            Navigator.of(context).pushReplacementNamed(RoutePaths.NavBar);                          },
-                          child: Container(
-                              width: 140,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                  color: Theme.of(context).accentColor,
-                                  border: Border.all(color: Theme.of(context).accentColor,style: BorderStyle.solid),
-                                  borderRadius: BorderRadius.all(Radius.circular(50))
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10,right: 25,left: 15),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Center(
+                            child: InkWell(
+                              onTap: ()async{
+                                SharedPreferences prefs = await SharedPreferences.getInstance();
 
-                              ),
+                                String  email=userProvider.emailControllerLog.text;
+                                String  password=userProvider.passwordControllerLog.text;
+                                if(!(email.isEmpty&&password.isEmpty)){
+                                  userProvider.loading=true;
+                                }
+                                await userController.loginController(email,password);
+                                prefs.setString('name', email.split('@')[0]);
+                                Firestore.instance.collection('Token').document().setData({
+                                  'token':prefs.get('token'),
+                                  'email':email,
+                                  'date':DateTime.now()
+                                });
+                                //email.split('@')[0]
+                                userProvider.loading=false;
+                                userProvider.emailControllerLog=null;
+                                userProvider.passwordControllerLog=null;
+                                Navigator.of(context).pushReplacementNamed(RoutePaths.NavBar);
+                                },
                               child: Container(
-                                width: 130,
-                                height: 40,
-                                decoration: BoxDecoration(
-                                    color: Theme.of(context).accentColor,
-                                    border: Border.all(color: Colors.white,style: BorderStyle.solid),
-                                    borderRadius: BorderRadius.all(Radius.circular(50))
+                                  width: 140,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                      color: Theme.of(context).accentColor,
+                                      border: Border.all(color: Theme.of(context).accentColor,style: BorderStyle.solid),
+                                      borderRadius: BorderRadius.all(Radius.circular(50))
+
+                                  ),
+                                  child: Container(
+                                      width: 130,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                          color: Theme.of(context).accentColor,
+                                          border: Border.all(color: Colors.white,style: BorderStyle.solid),
+                                          borderRadius: BorderRadius.all(Radius.circular(50))
 
 
-                                ),
-                                child: Center(
+                                      ),
+                                      child: Center(
 
-                                    child: (userProvider.loading)?CircularProgressIndicator(backgroundColor: Colors.white,):Text("دخول الان",style: TextStyle(fontSize: 20,color: Colors.white),),
-                              )
-                              )
-                          ),
-                    )
-                    )
-                  ],
-                ),
+                                        child: (userProvider.loading)?CircularProgressIndicator(backgroundColor: Colors.white,):Text("دخول الان",style: TextStyle(fontSize: 20,color: Colors.white),),
+                                      )
+                                  )
+                              ),
+                            )
+                        )
+                      ],
+                    ),
 
-              ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(top: 15),
                     child: Row(
@@ -147,20 +161,20 @@ class _LoginState extends State<Login> {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        appBar: AppBar(
-          title: Text("تسجيل الدخول",
-            style: TextStyle(
-              fontSize: 20,
-              color: Colors.black,
+          appBar: AppBar(
+            title: Text("تسجيل الدخول",
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.black,
 
-          ),),
-          centerTitle: true,
-          leading:Image(image:AssetImage('images/icon-logo3.png')) ,
+              ),),
+            centerTitle: true,
+            leading:Image(image:AssetImage('images/icon-logo3.png')) ,
 
-        ),
+          ),
 
 
-        body:_buildBodyLogin()
+          body:_buildBodyLogin()
 
       ),
     );

@@ -22,16 +22,6 @@ class Address extends StatefulWidget {
 class _AddressState extends State<Address> {
 
 
-
-  @override
-  void initState() {
-
-
-    // TODO: implement initState
-    super.initState();
-  }
-
-
   final _formKey = GlobalKey<FormState>();
 
 

@@ -2,6 +2,7 @@ import 'package:app_zooq/Core/services/addressProvider.dart';
 import 'package:app_zooq/Core/services/cart_controller.dart';
 import 'package:app_zooq/Core/services/mainProvider.dart';
 import 'package:app_zooq/UI/views/Address.dart';
+import 'package:app_zooq/UI/views/productdetails.dart';
 import 'package:app_zooq/UI/widgets/AutoText.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -16,6 +17,8 @@ class Cart extends StatefulWidget {
 class _CartState extends State<Cart> {
   final CartController cartController = CartController();
 
+  int itemsCart=0;
+
 
 
 
@@ -26,6 +29,7 @@ class _CartState extends State<Cart> {
     final mainProvider = Provider.of<MainProvider>(context);
     double width=MediaQuery.of(context).size.width;
     double height=MediaQuery.of(context).size.height;
+
 
     Widget _buildListview() {
       double widthcontent=MediaQuery.of(context).size.width-50;
@@ -44,7 +48,10 @@ class _CartState extends State<Cart> {
                           top: 5.0, bottom: 5, left: widthcontent*.01, right: widthcontent*.01),
                       child: Container(child: Text('Loading...')));
                 default:
+                  itemsCart=snapshot.data.documents.length;
+
                   return ListView(
+
                     children:
                         snapshot.data.documents.map((DocumentSnapshot document) {
 
@@ -83,7 +90,11 @@ class _CartState extends State<Cart> {
                                                 ),
                                               ),
                                               //.3
-                                              Container(
+                                              InkWell(
+                                                  onTap: ()async{
+                                                    await Navigator.push(context, MaterialPageRoute(builder: (context)=>Product(document)));
+                                                  },
+                                                  child:Container(
                                                 width: widthcontent*.3,
                                                 child: Column(
                                                   //mainAxisAlignment: MainAxisAlignment.start,
@@ -102,7 +113,7 @@ class _CartState extends State<Cart> {
                                                             .accentColor,lines: 1,)
                                                   ],
                                                 ),
-                                              ),
+                                              )),
 
                                               //.3
                                               Container(
@@ -125,10 +136,13 @@ class _CartState extends State<Cart> {
                                                         CrossAxisAlignment.center,
                                                     children: <Widget>[
                                                       Expanded(
-                                                        child: IconButton(
-                                                          icon: Icon(Icons.add,
-                                                              size: 15),
-                                                          onPressed: () {
+                                                        child: InkWell(
+                                                          child: Container(
+                                                            alignment: Alignment.center,
+                                                            child: Icon(Icons.add,
+                                                                size: 15),
+                                                          ),
+                                                          onTap: () {
                                                             Firestore.instance
                                                                 .collection('Cart')
                                                                 .document(document
@@ -145,8 +159,6 @@ class _CartState extends State<Cart> {
                                                                 .add(document[
                                                                     'price']);
                                                           },
-                                                          padding:
-                                                              EdgeInsets.all(0),
                                                         ),
                                                       ),
                                                       AutoText(
@@ -155,23 +167,17 @@ class _CartState extends State<Cart> {
                                                         size: 15,
                                                       ),
                                                       Expanded(
-                                                        child: IconButton(
-                                                          icon: Icon(
-                                                            Icons.minimize,
-                                                            size: 15,
+                                                        child: InkWell(
+                                                          child: Container(
+                                                            alignment: Alignment.topCenter,
+                                                            padding: EdgeInsets.only(top: 3),
+                                                            child: Icon(
+                                                              Icons.minimize,
+                                                              size: 15,
+                                                            ),
                                                           ),
-                                                          padding:
-                                                              EdgeInsets.all(0),
-                                                          onPressed: () {
-                                                            if (document[
-                                                                    'quantity'] >
-                                                                1)
-                                                              Firestore.instance
-                                                                  .collection(
-                                                                      'Cart')
-                                                                  .document(document
-                                                                      .documentID)
-                                                                  .updateData({
+                                                          onTap: () {
+                                                            if (document['quantity'] > 1) Firestore.instance.collection('Cart').document(document.documentID).updateData({
                                                                 'quantity': document[
                                                                         'quantity'] -
                                                                     1,
@@ -193,27 +199,14 @@ class _CartState extends State<Cart> {
                                                     EdgeInsets.only(left: width*.01),
                                                 child: InkWell(
                                                   onTap: () {
-                                                    Firestore.instance
-                                                        .collection('Cart')
-                                                        .document(
-                                                            document.documentID)
-                                                        .delete();
-                                                    Firestore.instance
-                                                        .collection('Product')
-                                                        .document(
-                                                            document.documentID)
-                                                        .updateData(
-                                                            {'cart': false});
+                                                    Firestore.instance.collection('Cart').document(document.documentID).delete();
+                                                    Firestore.instance.collection('Product').document(document.documentID)
+                                                        .updateData({'cart': false});
                                                     if (document['favourite'])
-                                                      Firestore.instance
-                                                          .collection('Favourite')
-                                                          .document(
-                                                              document.documentID)
-                                                          .updateData(
-                                                              {'cart': false});
+                                                      Firestore.instance.collection('Favourite').document(document.documentID)
+                                                          .updateData({'cart': false});
 
-                                                    cartController.minusCart
-                                                        .add(0);
+                                                    cartController.minusCart.add(0);
                                                   },
                                                   child: Container(
                                                     width: width*.06,
@@ -290,7 +283,6 @@ class _CartState extends State<Cart> {
           bottomNavigationBar: Container(
             height: 50,
             decoration: BoxDecoration(
-
                 color:Theme.of(context).accentColor
             ),
             child: Padding(
@@ -306,18 +298,20 @@ class _CartState extends State<Cart> {
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
                             color: Colors.white)),
-                    onTap: () {
+                    onTap: () async{
+
                       final addressProvider = Provider.of<AddressProvider>(context);
 
-                      addressProvider.description=TextEditingController();
-                      addressProvider.street=TextEditingController();
-                      addressProvider.phone=TextEditingController();
-                      addressProvider.notes=TextEditingController();
-                      addressProvider.city=null;
-                      addressProvider.check=null;
-                          Navigator.of(context).push(
-                              MaterialPageRoute(builder: (context) => Address('')));
-
+                      if(itemsCart>0){
+                        addressProvider.description=TextEditingController();
+                        addressProvider.street=TextEditingController();
+                        addressProvider.phone=TextEditingController();
+                        addressProvider.notes=TextEditingController();
+                        addressProvider.city=null;
+                        addressProvider.check=null;
+                        Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) => Address('')));
+                      }
                     },
                   )
                 ],

@@ -1,7 +1,10 @@
+import 'package:app_zooq/Core/services/user_controller.dart';
 import 'package:app_zooq/UI/views/Favourites.dart';
 import 'package:app_zooq/UI/views/Home.dart';
 import 'package:app_zooq/UI/views/Search.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 //Screen navbar
@@ -23,19 +26,27 @@ class _MainnavbarState extends State<Mainnavbar> {
 
   final scaffoldKey=GlobalKey<ScaffoldState>();
 
+  static var name='';
+
+
+
   int _selectedIndex=3;
   Widget body= Home();
   List <Widget> pages=[
-    ListDrawer(),
+    ListDrawer(name.toString()),
     Search(),
     Favourite(),
     Home()
  ];
 
 
-  void _onItemTapped(int index) {
+
+  void _onItemTapped(int index) async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
     setState(() {
       if(index == 0) {
+      name=prefs.get('name');
         scaffoldKey.currentState.openDrawer();
 
       }
@@ -56,7 +67,7 @@ class _MainnavbarState extends State<Mainnavbar> {
 
 key: scaffoldKey,
 
-        drawer:Drawer(child:  ListDrawer(),),
+        drawer:Drawer(child:  ListDrawer(name.toString()),),
 
        body:body,
         bottomNavigationBar: BottomNavigationBar(
