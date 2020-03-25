@@ -79,6 +79,8 @@ class _ShopMenState extends State<ShopMen> {
           popUP(),
           IconButton(icon:Image(image: AssetImage("images/icon-menu.png")),onPressed: (){
             mainProvider.gridOne=!mainProvider.gridOne;
+            setState(() {
+            });
           },),
         ],
       ),

@@ -87,8 +87,8 @@ class _LoginState extends State<Login> {
                                 });
                                 //email.split('@')[0]
                                 userProvider.loading=false;
-                                userProvider.emailControllerLog=null;
-                                userProvider.passwordControllerLog=null;
+                                userProvider.emailControllerLog=TextEditingController();
+                                userProvider.passwordControllerLog=TextEditingController();
                                 Navigator.of(context).pushReplacementNamed(RoutePaths.NavBar);
                                 },
                               child: Container(

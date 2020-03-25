@@ -105,100 +105,6 @@ bool _moreProductsAvailable=true;
 
   }
 
-//Widget Item(DocumentSnapshot document,int index){
-//
-//  double width=MediaQuery.of(context).size.width;
-//  double height=MediaQuery.of(context).size.height;
-//  double heightItem=height*.5;
-//
-//  bool fav=_products[index]['favourite'];
-//
-//  return Stack(
-//      alignment:Alignment.center,
-//      children: <Widget>[
-//        Positioned(
-//            left: 0,
-//            top: 0,
-//            child: IconButton(icon:(fav)?Icon(Icons.favorite):Icon(Icons.favorite_border),color:(fav)?Theme.of(context).accentColor:Colors.grey ,iconSize: 15,
-//                onPressed: (){
-//
-//                  setState(() async{
-//                    favoriteCondition(document);
-//                    _products[index]=await Firestore.instance.collection('Product').document(document.documentID).get();
-//                   print(_products[index]['favourite']);
-//
-//                  });
-//                })
-//        ),
-//
-//        Column(
-//          mainAxisAlignment: MainAxisAlignment.center,
-//          children: <Widget>[
-//            Container(
-//              height: heightItem/3,
-//              padding: EdgeInsets.only(top: heightItem*.01),
-//              child: InkWell(
-//                onTap: ()async{
-//                  await Navigator.push(context, MaterialPageRoute(builder: (context)=>Product(document)));
-//                },
-//                child: Container(
-//                  child: Image(image: ( document['images'] != null )?NetworkImage( document['images'][2],):null,fit: BoxFit.cover,),
-//                ),
-//              ),
-//            ),
-//
-//            Container(
-//              height: heightItem/3,
-//              child: Column(
-//                children: <Widget>[
-//                  Expanded(child: Text('${document['title']}',maxLines: 1, )),
-//
-//                  Expanded(child: Text("${document['price']} ريال",maxLines: 1,)),
-//                ],
-//              ),
-//            ),
-//
-//            Container(
-//              height: heightItem/5,
-//              child: InkWell(
-//                  onTap: ()async{
-//
-//                    await cardCondition(document);
-//
-//                  },
-//                  child: Container(
-//
-//                      width: MediaQuery.of(context).size.width/3,
-//                      decoration: BoxDecoration(
-//                          color: Theme.of(context).accentColor,
-//                          border: Border.all(color: Theme.of(context).accentColor,style: BorderStyle.solid),
-//                          borderRadius: BorderRadius.all(Radius.circular(20))
-//
-//                      ),
-//                      child: Container(
-//                        width:  (MediaQuery.of(context).size.width/3),
-//                        alignment: Alignment.center,
-//                        padding: EdgeInsets.only(left: 5,right: 5),
-//                        decoration: BoxDecoration(
-//                            color: Theme.of(context).accentColor,
-//                            border: Border.all(color: Colors.white,style: BorderStyle.solid),
-//                            borderRadius: BorderRadius.all(Radius.circular(20))),
-//                        child: Row(
-//                          mainAxisAlignment: MainAxisAlignment.center,
-//                          children: <Widget>[
-//                            Image(image: AssetImage("images/logo-shopcar.png"),width: 20,fit: BoxFit.cover,),
-//                            SizedBox(width: 3,),
-//                            Expanded(child: Text((!document['cart'])?"اضف للسلة":"ازالة من السلة" ,style:TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 10),maxLines: 1,textAlign: TextAlign.center,)),
-//                          ],
-//                        ),
-//                      ))),
-//            )
-//
-//          ],
-//        ),
-//      ],
-//    );
-//}
 
 
   getData()async{
@@ -288,7 +194,7 @@ bool _moreProductsAvailable=true;
     ):
     Container(
       width: width,
-      height: height-kBottomNavigationBarHeight-kToolbarHeight,
+      height:(widget.nameCollection=="Favourite")? height-kBottomNavigationBarHeight-kToolbarHeight-55:height-kBottomNavigationBarHeight-kToolbarHeight,
       child:(mainProvider.gridOne)? AnimationLimiter(
         child: GridView.builder(
         controller: _scrollController,

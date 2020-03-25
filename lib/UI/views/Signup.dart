@@ -86,8 +86,8 @@ class _SignupState extends State<Signup> {
                                   'email':email,
                                   'date':DateTime.now()
                                 });
-                                userProvider.emailControllerReg=null;
-                              userProvider.passwordControllerReg=null;
+                                userProvider.emailControllerReg=TextEditingController();
+                              userProvider.passwordControllerReg=TextEditingController();
                               Navigator.of(context).pushReplacementNamed(RoutePaths.NavBar);
                               },
                               child: Container(
